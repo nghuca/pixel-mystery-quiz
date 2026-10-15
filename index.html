@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Mystery Quiz - Trắc Nghiệm Mảnh Ghép Pixel</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎮</text></svg>">
+</head>
+<body>
+  <!-- Canvas Confetti Hiệu ứng pháo hoa -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Thanh tiêu đề điều khiển phía trên -->
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">👾</span>
+      <div>
+        <h1>PIXEL MYSTERY QUIZ</h1>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <!-- Lựa chọn bộ tranh có sẵn -->
+      <select id="preset-selector" class="custom-select" title="Chọn bộ tranh mẫu">
+        <option value="heart">❤️ Trái Tim 8-Bit</option>
+        <option value="star">⭐ Ngôi Sao Vàng</option>
+        <option value="trophy">🏆 Cúp Vô Địch</option>
+      </select>
+
+      <!-- Nút Mở Studio Quản lý câu hỏi & Tải ảnh -->
+      <button id="open-studio-btn" class="btn-primary" title="Tải ảnh cá nhân và quản lý câu hỏi">
+        ⚙️ Quản lý & Ảnh
+      </button>
+
+      <!-- Nút Chơi lại -->
+      <button id="restart-btn" class="btn-icon" title="Chơi lại từ đầu">
+        🔄
+      </button>
+
+      <!-- Nút Bật/Tắt âm thanh -->
+      <button id="mute-btn" class="btn-icon" title="Bật/Tắt âm thanh">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Khu vực trò chơi chính -->
+  <main class="main-container">
+    <!-- Cột trái: Bức tranh Pixel Bí ẩn -->
+    <section class="pixel-arena" aria-label="Bức tranh Pixel">
+      <div class="arena-header">
+        <span id="pack-title" class="pack-badge">❤️ Trái Tim 8-Bit</span>
+        <span id="progress-percent" class="progress-tag">0%</span>
+      </div>
+
+      <!-- Khung hiển thị tranh pixel -->
+      <div class="canvas-wrapper">
+        <canvas id="pixel-canvas" width="340" height="340"></canvas>
+      </div>
+
+      <!-- Thanh tiến độ tô màu -->
+      <div class="progress-container">
+        <div class="progress-bar-bg">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+        <div class="progress-info">
+          <span>Tiến độ khám phá</span>
+          <span id="pixel-count-text">0 / 256 ô đã mở</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Cột phải: Khu vực Câu hỏi Trắc nghiệm -->
+    <section class="quiz-arena" aria-label="Khu vực câu hỏi">
+      <!-- Bảng trạng thái: Điểm số, Streak, Số câu -->
+      <div class="stats-ribbon">
+        <div class="stat-item">
+          <span class="stat-label">Điểm số</span>
+          <span id="score-display" class="stat-value">0</span>
+        </div>
+
+        <div id="streak-badge" class="streak-badge" title="Chuỗi câu trả lời đúng liên tiếp">
+          <span>🔥</span>
+          <span id="streak-count">x0</span>
+        </div>
+
+        <div class="stat-item">
+          <span id="question-counter" class="question-header">Câu hỏi 1 / 8</span>
+        </div>
+      </div>
+
+      <!-- Nội dung câu hỏi -->
+      <h2 id="question-text" class="question-text">Đang tải câu hỏi...</h2>
+
+      <!-- 4 Phương án lựa chọn A, B, C, D -->
+      <div id="options-container" class="options-grid"></div>
+
+      <!-- Bảng phản hồi kết quả và giải thích -->
+      <div id="feedback-box" class="feedback-box hidden"></div>
+
+      <!-- Nút sang câu tiếp theo -->
+      <div class="action-row">
+        <button id="next-btn" class="btn-primary hidden">
+          Câu tiếp theo ➔
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Chúc mừng Chiến thắng (Victory Dialog) -->
+  <dialog id="victory-dialog">
+    <div class="victory-content">
+      <div style="font-size: 3rem;">🏆</div>
+      <h2 class="victory-title">XUẤT SẮC!</h2>
+      <p style="color: var(--text-muted);">Bạn đã mở khóa thành công toàn bộ bức tranh Pixel!</p>
+
+      <div class="final-artwork-box">
+        <img id="final-pixel-preview" alt="Bức tranh Pixel hoàn thiện" src="">
+      </div>
+
+      <div class="victory-stats-grid">
+        <div class="victory-stat">
+          <span id="final-score" class="v-num">0</span>
+          <span class="v-lbl">Tổng điểm</span>
+        </div>
+        <div class="victory-stat">
+          <span id="final-correct" class="v-num">0/0</span>
+          <span class="v-lbl">Đúng</span>
+        </div>
+        <div class="victory-stat">
+          <span id="final-streak" class="v-num">0</span>
+          <span class="v-lbl">Chuỗi đỉnh cao</span>
+        </div>
+      </div>
+
+      <div class="victory-actions">
+        <button id="download-art-btn" class="btn-secondary">
+          💾 Tải ảnh về máy
+        </button>
+        <button id="play-again-btn" class="btn-primary">
+          🔄 Chơi lượt mới
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Modal Studio: Quản lý Câu hỏi & Tải ảnh (Studio Dialog) -->
+  <dialog id="studio-dialog">
+    <div class="dialog-header">
+      <h2>Studio Quản Lý & Tải Ảnh</h2>
+      <button id="close-studio-btn" class="btn-close" aria-label="Đóng">&times;</button>
+    </div>
+
+    <!-- Tabs chuyển đổi -->
+    <div class="studio-tabs">
+      <button class="studio-tab-btn active" data-tab="upload">🖼️ Tải & Pixel Hóa Ảnh</button>
+      <button class="studio-tab-btn" data-tab="questions">📝 Quản Lý Câu Hỏi</button>
+      <button class="studio-tab-btn" data-tab="backup">💾 Nhập / Xuất</button>
+    </div>
+
+    <!-- TAB 1: TẢI ẢNH CÁ NHÂN -->
+    <div id="tab-upload" class="studio-tab-panel">
+      <div class="form-group">
+        <label for="image-upload-input">1. Chọn hình ảnh từ máy tính (PNG, JPG, WebP):</label>
+        <input type="file" id="image-upload-input" accept="image/*" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="pixel-resolution-select">2. Độ phân giải lưới Pixel:</label>
+        <select id="pixel-resolution-select" class="custom-select">
+          <option value="12">12 x 12 (Siêu to, phong cách Retro cổ điển)</option>
+          <option value="16" selected>16 x 16 (Khuyên dùng - Cân bằng độ nét & số câu)</option>
+          <option value="20">20 x 20 (Chi tiết hơn)</option>
+          <option value="24">24 x 24 (Rất chi tiết)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="custom-art-name">3. Tên bức tranh / Gợi ý chủ đề:</label>
+        <input type="text" id="custom-art-name" class="form-input" placeholder="Ví dụ: Bức tranh bí mật của lớp 12A">
+      </div>
+
+      <!-- Khung xem trước -->
+      <div class="image-preview-container">
+        <div class="preview-box">
+          <span>Ảnh gốc</span>
+          <img id="original-image-preview" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><rect width='100%' height='100%' fill='%231e293b'/><text x='50%' y='50%' fill='%2364748b' text-anchor='middle' dy='.3em'>Chưa chọn ảnh</text></svg>" alt="Ảnh gốc">
+        </div>
+        <div style="font-size: 1.5rem; color: var(--accent-cyan);">➔</div>
+        <div class="preview-box">
+          <span>Bản Pixel Hóa</span>
+          <canvas id="pixelated-preview-canvas" width="160" height="160"></canvas>
+        </div>
+      </div>
+
+      <button id="apply-image-btn" class="btn-primary" disabled style="width: 100%; justify-content: center;">
+        ✨ Áp dụng tranh Pixel này vào trò chơi
+      </button>
+    </div>
+
+    <!-- TAB 2: QUẢN LÝ CÂU HỎI -->
+    <div id="tab-questions" class="studio-tab-panel hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-weight: 600;">Danh sách câu hỏi hiện có:</span>
+        <span id="total-questions-badge" class="progress-tag">8 câu</span>
+      </div>
+
+      <!-- Danh sách câu hỏi cuộn được -->
+      <div id="studio-questions-list" class="studio-questions-list"></div>
+
+      <!-- Form Thêm / Sửa câu hỏi -->
+      <form id="question-form" style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 0.8rem;">
+        <span style="font-weight: 700; color: var(--accent-cyan);">Thêm / Chỉnh sửa câu hỏi:</span>
+        
+        <div class="form-group">
+          <label for="form-question-text">Nội dung câu hỏi:</label>
+          <textarea id="form-question-text" class="form-textarea" rows="2" placeholder="Nhập câu hỏi tại đây..." required></textarea>
+        </div>
+
+        <label style="font-size: 0.85rem; color: var(--text-muted);">
+          4 Phương án lựa chọn (Đánh dấu tròn vào đáp án ĐÚNG):
+        </label>
+        <div class="options-form-grid">
+          <div class="opt-input-wrapper">
+            <input type="radio" name="correct-option" value="0" checked title="Đáp án A đúng">
+            <input type="text" id="form-opt-0" class="form-input" placeholder="Phương án A" required>
+          </div>
+          <div class="opt-input-wrapper">
+            <input type="radio" name="correct-option" value="1" title="Đáp án B đúng">
+            <input type="text" id="form-opt-1" class="form-input" placeholder="Phương án B" required>
+          </div>
+          <div class="opt-input-wrapper">
+            <input type="radio" name="correct-option" value="2" title="Đáp án C đúng">
+            <input type="text" id="form-opt-2" class="form-input" placeholder="Phương án C" required>
+          </div>
+          <div class="opt-input-wrapper">
+            <input type="radio" name="correct-option" value="3" title="Đáp án D đúng">
+            <input type="text" id="form-opt-3" class="form-input" placeholder="Phương án D" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="form-explanation">Giải thích ngắn (tùy chọn, hiển thị sau khi trả lời):</label>
+          <input type="text" id="form-explanation" class="form-input" placeholder="Ví dụ: Vì Trái Đất quay quanh Mặt Trời...">
+        </div>
+
+        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+          <button type="button" id="cancel-edit-btn" class="btn-secondary hidden">Hủy sửa</button>
+          <button type="submit" id="form-submit-btn" class="btn-primary">➕ Thêm câu hỏi này</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- TAB 3: SAO LƯU & XUẤT NHẬP DỮ LIỆU -->
+    <div id="tab-backup" class="studio-tab-panel hidden">
+      <p style="color: var(--text-muted); font-size: 0.9rem;">
+        Bạn có thể xuất toàn bộ bộ câu hỏi cùng tranh pixel thành file JSON để chia sẻ cho học sinh, bạn bè, hoặc lưu trữ trên máy tính.
+      </p>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button id="export-json-btn" class="btn-secondary">
+          📤 Xuất bộ đề ra file JSON
+        </button>
+
+        <button id="import-json-btn" class="btn-secondary">
+          📥 Nhập bộ đề từ file JSON
+        </button>
+        <input type="file" id="import-json-file" accept=".json" style="display: none;">
+      </div>
+
+      <hr style="border-color: var(--border-color); margin: 1rem 0;">
+
+      <div>
+        <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">Vùng Nguy Hiểm</h4>
+        <button id="reset-default-btn" class="btn-secondary" style="border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">
+          ⚠️ Khôi phục bộ câu hỏi & tranh mẫu mặc định
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Các Script chức năng -->
+  <script src="js/sound.js"></script>
+  <script src="js/confetti.js"></script>
+  <script src="js/default-data.js"></script>
+  <script src="js/pixel-engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
