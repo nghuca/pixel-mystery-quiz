@@ -18,6 +18,45 @@ function parseAsciiPixelArt(lines, palette) {
   return { width, height, pixels };
 }
 
+// 0. Tranh mẫu: Mừng Ngày Phụ Nữ Việt Nam 20/10 (24x24)
+const WOMEN_DAY_LINES = [
+  "........GG........GG....",
+  "..GG...GRRG..GG..GRRG...",
+  ".GEEG.GRRYRGGEEGGRRYRG..",
+  ".GDG..GRRRG..GDG.GRRRG..",
+  "..B...BBRRB...B..BBRRB..",
+  "....BBPPPBBBB..BBPPPBBBB",
+  "..BBPPPPPPPPBBBBPPPPPPPP",
+  ".BPPPPPPPPPPPPPPPPPPPPP.",
+  ".BPPPPPRRRRRRRRRRRRPPPP.",
+  ".BPPPPRRRRRRRRRRRRRRPPP.",
+  ".BPPYYYRYYYRRRRRYRYYYPB.",
+  ".BPPRRYRYRYRRRRYYRYRYPB.",
+  ".BPPYYYRYRYRYYRRYRYRYPB.",
+  ".BPPYRRRYRYRRRRRYRYRYPB.",
+  ".BPPYYYRYYYRRRRYYRYYYPB.",
+  "..BPPPPPRRRRRRRRRRRRPPB.",
+  "..BPPPPPRRRRRRRRRRRRPPB.",
+  "...BBPPPPPPPPPPPPPPBB...",
+  "....BBPPPPPPPPPPPPBB....",
+  "..GG..BBPPPPPPPPBB..GG..",
+  ".GEEG..BBPPPPPPBB..GEEG.",
+  ".GRYRG...BBPPBB...GRYRG.",
+  "..GDG.....BBBB.....GDG..",
+  "........................"
+];
+
+const WOMEN_DAY_PALETTE = {
+  '.': 'transparent',
+  'B': '#4c0519', // Viền hạt dẻ đỏ thẫm
+  'P': '#fb7185', // Hồng hoa đào
+  'R': '#e11d48', // Đỏ hoa hồng
+  'Y': '#fef08a', // Chữ '20 - 10' vàng tươi
+  'G': '#16a34a', // Xanh lá
+  'E': '#4ade80', // Xanh lá sáng
+  'D': '#14532d'  // Xanh lá thẫm
+};
+
 // 1. Tranh mẫu: Trái Tim 8-Bit (16x16)
 const HEART_LINES = [
   "................",
@@ -100,6 +139,254 @@ const TROPHY_PALETTE = {
 };
 
 window.DEFAULT_PRESETS = [
+  {
+    id: 'women-day-20-10',
+    name: '🌸 Mừng Ngày 20/10 - Phụ Nữ Việt Nam',
+    description: 'Tranh Pixel Trái Tim 20-10 cùng hoa rực rỡ và 20 câu đố vui ngày Phụ Nữ Việt Nam.',
+    pixelArt: parseAsciiPixelArt(WOMEN_DAY_LINES, WOMEN_DAY_PALETTE),
+    questions: [
+      {
+            "id": 1,
+            "question": "Hai vị nữ anh hùng đầu tiên khởi nghĩa đánh đuổi quân Đông Hán vào năm 40 là ai?",
+            "options": [
+                  "Hai Bà Trưng",
+                  "Bà Triệu và Bùi Thị Xuân",
+                  "Lê Chân và Thánh Thiên",
+                  "Ỷ Lan và Dương Vân Nga"
+            ],
+            "correctIndex": 0,
+            "explanation": "Hai Bà Trưng (Trưng Trắc và Trưng Nhị) đã lãnh đạo cuộc khởi nghĩa năm 40 đánh đuổi quân Đông Hán."
+      },
+      {
+            "id": 2,
+            "question": "Câu nói nổi tiếng: \"Tôi chỉ muốn cưỡi cơn gió mạnh, đạp luồng sóng dữ, chém cá kình ở biển Đông...\" là của ai?",
+            "options": [
+                  "Trưng Trắc",
+                  "Lê Chân",
+                  "Bà Triệu",
+                  "Bùi Thị Xuân"
+            ],
+            "correctIndex": 2,
+            "explanation": "Đây là câu nói thể hiện khí phách quật cường bất khuất của nữ anh hùng Triệu Thị Trinh (Bà Triệu)."
+      },
+      {
+            "id": 3,
+            "question": "Ngày Phụ nữ Việt Nam 20/10 gắn liền với sự kiện thành lập tổ chức nào vào năm 1930?",
+            "options": [
+                  "Hội Liên hiệp Thanh niên Việt Nam",
+                  "Hội Phụ nữ phản đế Việt Nam (nay là Hội Liên hiệp Phụ nữ Việt Nam)",
+                  "Hội Chữ thập đỏ Việt Nam",
+                  "Tổng Liên đoàn Lao động Việt Nam"
+            ],
+            "correctIndex": 1,
+            "explanation": "Ngày 20/10/1930, Hội Phụ nữ phản đế Việt Nam được thành lập, đánh dấu mốc son lịch sử của phong trào phụ nữ Việt Nam."
+      },
+      {
+            "id": 4,
+            "question": "Nữ chiến sĩ cách mạng nào từng giữ chức Bí thư Thành ủy Sài Gòn – Chợ Lớn và lãnh đạo cuộc Khởi nghĩa Nam Kỳ năm 1940?",
+            "options": [
+                  "Nguyễn Thị Minh Khai",
+                  "Hoàng Thị Ái",
+                  "Lê Thị Riêng",
+                  "Nguyễn Thị Nhỏ"
+            ],
+            "correctIndex": 0,
+            "explanation": "Đồng chí Nguyễn Thị Minh Khai là Bí thư Thành ủy Sài Gòn – Chợ Lớn kiên trung bất khuất."
+      },
+      {
+            "id": 5,
+            "question": "Nữ anh hùng liệt sĩ trẻ tuổi quê ở Đất Đỏ, gắn liền với hình ảnh hoa lê-ki-ma tại Côn Đảo là ai?",
+            "options": [
+                  "Mạc Thị Bưởi",
+                  "Võ Thị Sáu",
+                  "Trần Thị Lý",
+                  "Đặng Thùy Trâm"
+            ],
+            "correctIndex": 1,
+            "explanation": "Chị Võ Thị Sáu hy sinh kiên cường tại Côn Đảo khi tuổi đời còn rất trẻ, gắn liền với hình ảnh hoa lê-ki-ma."
+      },
+      {
+            "id": 6,
+            "question": "Bác Hồ đã trao tặng phụ nữ Việt Nam 8 chữ vàng: \"Anh hùng – Bất khuất – ... – ...\". Hai cụm từ còn thiếu là gì?",
+            "options": [
+                  "Dịu dàng – Đảm đang",
+                  "Trung hậu – Đảm đang",
+                  "Thủy chung – Hiền thảo",
+                  "Cần cù – Sáng tạo"
+            ],
+            "correctIndex": 1,
+            "explanation": "Tám chữ vàng Bác Hồ trao tặng phụ nữ Việt Nam là: \"Anh hùng – Bất khuất – Trung hậu – Đảm đang\"."
+      },
+      {
+            "id": 7,
+            "question": "Trang phục truyền thống nào luôn xuất hiện trong \"Tuần lễ...\" tôn vinh vẻ đẹp phụ nữ Việt Nam dịp 20/10?",
+            "options": [
+                  "Áo tứ thân",
+                  "Áo bà ba",
+                  "Áo dài",
+                  "Áo chàm"
+            ],
+            "correctIndex": 2,
+            "explanation": "Áo dài là quốc phục truyền thống tôn vinh nét đẹp duyên dáng của người phụ nữ Việt Nam."
+      },
+      {
+            "id": 8,
+            "question": "Điền từ còn thiếu vào câu tục ngữ: \"Đàn ông xây nhà, đàn bà ..................\"",
+            "options": [
+                  "Giữ của cải",
+                  "Xây tổ ấm",
+                  "Lo bếp núc",
+                  "Nuôi con ngoan"
+            ],
+            "correctIndex": 1,
+            "explanation": "Câu tục ngữ quen thuộc: \"Đàn ông xây nhà, đàn bà xây tổ ấm\"."
+      },
+      {
+            "id": 9,
+            "question": "Người phụ nữ duy nhất đặt bút ký vào Hiệp định Paris năm 1973 về lập lại hòa bình ở Việt Nam là ai?",
+            "options": [
+                  "Nguyễn Thị Định",
+                  "Nguyễn Thị Bình",
+                  "Nguyễn Thị Thập",
+                  "Hà Thị Khiết"
+            ],
+            "correctIndex": 1,
+            "explanation": "Bà Nguyễn Thị Bình, nguyên Bộ trưởng Ngoại giao Chính phủ Cách mạng lâm thời Cộng hòa miền Nam Việt Nam, là người phụ nữ duy nhất ký Hiệp định Paris 1973."
+      },
+      {
+            "id": 10,
+            "question": "Câu hát \"Bao ngày mẹ ngóng, bao ngày mẹ trông, bao ngày mẹ mong con chào đời...\" nằm trong bài hát nào?",
+            "options": [
+                  "Bông hồng cài áo",
+                  "Nhật ký của mẹ",
+                  "Mẹ yêu",
+                  "Ước mơ của mẹ"
+            ],
+            "correctIndex": 1,
+            "explanation": "Đó là ca khúc \"Nhật ký của mẹ\" do nhạc sĩ Nguyễn Văn Chung sáng tác, ca ngợi tình mẫu tử thiêng liêng."
+      },
+      {
+            "id": 11,
+            "question": "Nguyên mẫu Tượng đài \"Bà mẹ Việt Nam Anh hùng\" tại tỉnh Quảng Nam là người mẹ nào?",
+            "options": [
+                  "Mẹ Nguyễn Thị Thứ",
+                  "Mẹ Phạm Thị Ngư",
+                  "Mẹ Trần Thị Viết",
+                  "Mẹ Nguyễn Thị Rành"
+            ],
+            "correctIndex": 0,
+            "explanation": "Mẹ Nguyễn Thị Thứ (xã Điện Thắng Trung, thị xã Điện Bàn, tỉnh Quảng Nam) có 9 người con ruột, 1 con rể và 2 cháu ngoại hy sinh."
+      },
+      {
+            "id": 12,
+            "question": "Điểm khác biệt lớn nhất giữa ngày lễ 20/10 và ngày lễ 08/03 là gì?",
+            "options": [
+                  "20/10 là ngày Quốc tế Phụ nữ, 08/03 là ngày Phụ nữ Việt Nam",
+                  "08/03 là ngày Quốc tế Phụ nữ, còn 20/10 dành riêng tôn vinh Phụ nữ Việt Nam",
+                  "20/10 chỉ dành cho các bà mẹ",
+                  "Cả hai đều là ngày lễ quốc tế"
+            ],
+            "correctIndex": 1,
+            "explanation": "Ngày 8/3 là ngày Quốc tế Phụ nữ, còn ngày 20/10 là ngày kỷ niệm dành riêng để tôn vinh Phụ nữ Việt Nam."
+      },
+      {
+            "id": 13,
+            "question": "Bài thơ \"Bánh trôi nước\" (\"Thân em vừa trắng lại vừa tròn...\") là tác phẩm của nữ sĩ nào?",
+            "options": [
+                  "Đoàn Thị Điểm",
+                  "Bà Huyện Thanh Quan",
+                  "Hồ Xuân Hương",
+                  "Xuân Quỳnh"
+            ],
+            "correctIndex": 2,
+            "explanation": "Nữ sĩ Hồ Xuân Hương - được tôn vinh là \"Bà chúa thơ Nôm\" - là tác giả của bài thơ Bánh trôi nước."
+      },
+      {
+            "id": 14,
+            "question": "Chiếc khăn kẻ ô vuông truyền thống gắn bó với hình ảnh phụ nữ miền Nam có tên là gì?",
+            "options": [
+                  "Khăn mỏ quạ",
+                  "Khăn rằn Nam Bộ",
+                  "Khăn piêu",
+                  "Khăn đóng"
+            ],
+            "correctIndex": 1,
+            "explanation": "Khăn rằn là nét đặc trưng mộc mạc của phụ nữ Nam Bộ và các nữ chiến sĩ kiên cường."
+      },
+      {
+            "id": 15,
+            "question": "Điền từ còn thiếu vào câu ca dao: \"Công cha như núi Thái Sơn / Nghĩa mẹ như ....................\"?",
+            "options": [
+                  "Biển rộng mênh mông",
+                  "Nước trong nguồn chảy ra",
+                  "Sông dài biển lớn",
+                  "Ánh trăng sáng ngời"
+            ],
+            "correctIndex": 1,
+            "explanation": "Câu ca dao trọn vẹn: \"Công cha như núi Thái Sơn / Nghĩa mẹ như nước trong nguồn chảy ra\"."
+      },
+      {
+            "id": 16,
+            "question": "Cụm từ \"Phái đẹp\" hay \"Một nửa thế giới\" thường được dùng để tôn vinh ai?",
+            "options": [
+                  "Trẻ em",
+                  "Người cao tuổi",
+                  "Phụ nữ",
+                  "Nam giới"
+            ],
+            "correctIndex": 2,
+            "explanation": "\"Phái đẹp\" và \"Một nửa thế giới\" là những cụm từ trang trọng dùng để tôn vinh phụ nữ."
+      },
+      {
+            "id": 17,
+            "question": "Trong các dịp lễ tôn vinh Mẹ và Phụ nữ, loài hoa nào phổ biến nhất tượng trưng cho tình yêu thương?",
+            "options": [
+                  "Hoa phượng",
+                  "Hoa hồng",
+                  "Hoa mai",
+                  "Hoa dâm bụt"
+            ],
+            "correctIndex": 1,
+            "explanation": "Hoa hồng là loài hoa phổ biến nhất tượng trưng cho tình cảm chân thành, sự trân trọng và tình yêu thương."
+      },
+      {
+            "id": 18,
+            "question": "Bài hát thiếu nhi quen thuộc nào mở đầu bằng câu: \"Lúc ở nhà mẹ cũng là cô giáo / Khi đến trường cô giáo như mẹ hiền\"?",
+            "options": [
+                  "Cô và mẹ",
+                  "Bàn tay mẹ",
+                  "Cho con",
+                  "Cả nhà thương nhau"
+            ],
+            "correctIndex": 0,
+            "explanation": "Đó là ca khúc \"Cô và mẹ\" do nhạc sĩ Phạm Tuyên sáng tác."
+      },
+      {
+            "id": 19,
+            "question": "Điền từ còn thiếu vào câu ca dao: \"Con dù lớn vẫn là con của mẹ / Đi hết đời lòng mẹ vẫn ....................\"?",
+            "options": [
+                  "Nhớ thương",
+                  "Theo con",
+                  "Bên con",
+                  "Mong con"
+            ],
+            "correctIndex": 1,
+            "explanation": "Hai câu thơ nổi tiếng của nhà thơ Chế Lan Viên trong bài thơ \"Con cò\": \"Con dù lớn vẫn là con của mẹ / Đi hết đời, lòng mẹ vẫn theo con\"."
+      },
+      {
+            "id": 20,
+            "question": "Vào ngày 20/10 tại trường học, học sinh thường gửi lời chúc mừng và tri ân tới những ai?",
+            "options": [
+                  "Chỉ các bạn nam trong lớp",
+                  "Cô giáo, các cô nhân viên nhà trường và các bạn nữ",
+                  "Chỉ thầy hiệu trưởng",
+                  "Chỉ các vận động viên thể thao"
+            ],
+            "correctIndex": 1,
+            "explanation": "Dịp 20/10 là ngày để học sinh tri ân cô giáo, các nữ cán bộ nhân viên nhà trường và gửi lời chúc tốt đẹp tới các bạn nữ trong lớp."
+      }
+]
+  },
   {
     id: 'heart',
     name: '❤️ Trái Tim 8-Bit',
